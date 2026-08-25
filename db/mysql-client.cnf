@@ -1,0 +1,7 @@
+# 强制 mysql 客户端（含 docker-entrypoint 导入 initdb 脚本时）使用 utf8mb4，
+# 否则初始化导入 UTF-8 中文会被按 latin1 二次编码。
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4

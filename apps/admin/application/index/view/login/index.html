@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星澜运营后台 - 登录</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; }
+.box { max-width: 380px; margin: 90px auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 30px; }
+h1 { font-size: 20px; margin-bottom: 6px; color: #1e293b; }
+p.tip { color: #94a3b8; font-size: 13px; margin-bottom: 18px; }
+label { display: block; font-size: 14px; margin-top: 12px; }
+input { display: block; width: 100%; padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-top: 4px; font-size: 14px; }
+button { margin-top: 18px; width: 100%; background: #2563eb; color: #fff; border: 0; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.msg { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: 8px; padding: 10px; font-size: 13px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="box">
+<h1>星澜运营后台</h1>
+<p class="tip">仅限运营与管理员使用，登录行为将被记录</p>
+<?php if (session('?login_error')): ?>
+<div class="msg"><?php echo session('login_error'); session('login_error', null); ?></div>
+<?php endif; ?>
+<form method="post" action="<?php echo url('index/login/doLogin'); ?>">
+<label>账号 <input name="username" required autocomplete="username"></label>
+<label>密码 <input type="password" name="password" required autocomplete="current-password"></label>
+<button type="submit">登录</button>
+</form>
+</div>
+</body>
+</html>
