@@ -1,16 +1,12 @@
 FROM php:7.4-apache-bullseye
 
-# 国内网络默认走阿里源;海外构建:docker compose build --build-arg USE_CN_MIRROR=0
-ARG USE_CN_MIRROR=1
-RUN if [ "$USE_CN_MIRROR" = "1" ]; then \
-      if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
-        sed -i 's|deb.debian.org/debian|mirrors.aliyun.com/debian|g; s|security.debian.org/debian-security|mirrors.aliyun.com/debian-security|g' /etc/apt/sources.list.d/debian.sources; \
-      fi; \
-      if [ -f /etc/apt/sources.list ] && [ -s /etc/apt/sources.list ]; then \
-        sed -i 's|deb.debian.org|mirrors.aliyun.com|g; s|security.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list; \
-      fi; \
-    fi; \
-    apt-get -o Acquire::Check-Valid-Until=false update -qq \
+# bullseye LTS 已于 2026-08-31 结束，常规镜像源索引漂移导致 404。
+# 改用 snapshot.debian.org 的日期快照，永久冻结 bullseye 软件包版本。
+# 快照的 Release 文件会"过期"，因此必须关闭 Check-Valid-Until。
+# 参考：https://github.com/activepieces/activepieces/commit/86b9c29
+RUN printf 'deb http://snapshot.debian.org/archive/debian/20260825T000000Z bullseye main\ndeb http://snapshot.debian.org/archive/debian-security/20260825T000000Z bullseye-security main\n' > /etc/apt/sources.list \
+    && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99snapshot \
+    && apt-get update -qq \
     && apt-get install -y -qq --no-install-recommends unzip zip \
     && rm -rf /var/lib/apt/lists/*
 
